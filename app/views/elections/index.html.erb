@@ -1,0 +1,47 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Elections</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Election type</th>
+      <th>State</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Scope type</th>
+      <th>Scope id region</th>
+      <th>Preparation starts at</th>
+      <th>Preparation ends at</th>
+      <th>Voting starts at</th>
+      <th>Voting ends at</th>
+      <th>Public key</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @elections.each do |election| %>
+      <tr>
+        <td><%= election.election_type %></td>
+        <td><%= election.state %></td>
+        <td><%= election.title %></td>
+        <td><%= election.description %></td>
+        <td><%= election.scope_type %></td>
+        <td><%= election.scope_id_region %></td>
+        <td><%= election.preparation_starts_at %></td>
+        <td><%= election.preparation_ends_at %></td>
+        <td><%= election.voting_starts_at %></td>
+        <td><%= election.voting_ends_at %></td>
+        <td><%= election.public_key %></td>
+        <td><%= link_to 'Show', election %></td>
+        <td><%= link_to 'Edit', edit_election_path(election) %></td>
+        <td><%= link_to 'Destroy', election, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Election', new_election_path %>

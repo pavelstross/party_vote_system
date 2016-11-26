@@ -1,0 +1,2 @@
+json.extract! election, :id, :election_type, :state, :title, :description, :scope_type, :scope_id_region, :preparation_starts_at, :preparation_ends_at, :voting_starts_at, :voting_ends_at, :public_key, :created_at, :updated_at
+json.url election_url(election, format: :json)

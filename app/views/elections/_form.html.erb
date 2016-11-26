@@ -1,0 +1,72 @@
+<%= form_for(election) do |f| %>
+  <% if election.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(election.errors.count, "error") %> prohibited this election from being saved:</h2>
+
+      <ul>
+      <% election.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :election_type %>
+    <%= f.text_field :election_type %>
+  </div>
+
+  <div class="field">
+    <%= f.label :state %>
+    <%= f.text_field :state %>
+  </div>
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description %>
+    <%= f.text_area :description %>
+  </div>
+
+  <div class="field">
+    <%= f.label :scope_type %>
+    <%= f.text_field :scope_type %>
+  </div>
+
+  <div class="field">
+    <%= f.label :scope_id_region %>
+    <%= f.number_field :scope_id_region %>
+  </div>
+
+  <div class="field">
+    <%= f.label :preparation_starts_at %>
+    <%= f.datetime_select :preparation_starts_at %>
+  </div>
+
+  <div class="field">
+    <%= f.label :preparation_ends_at %>
+    <%= f.datetime_select :preparation_ends_at %>
+  </div>
+
+  <div class="field">
+    <%= f.label :voting_starts_at %>
+    <%= f.datetime_select :voting_starts_at %>
+  </div>
+
+  <div class="field">
+    <%= f.label :voting_ends_at %>
+    <%= f.datetime_select :voting_ends_at %>
+  </div>
+
+  <div class="field">
+    <%= f.label :public_key %>
+    <%= f.text_area :public_key %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
