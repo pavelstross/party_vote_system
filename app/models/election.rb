@@ -11,4 +11,6 @@ class Election
   field :voting_starts_at, type: Time
   field :voting_ends_at, type: Time
   field :public_key, type: String
+  has_one :ballot_box
+  has_one :participant_list
 end
