@@ -50,3 +50,8 @@ gem 'mongoid', '~> 6.0.0'
 
 # Konfigurace
 gem 'configatron'
+
+# HTTP client
+gem 'httparty'
+
+
