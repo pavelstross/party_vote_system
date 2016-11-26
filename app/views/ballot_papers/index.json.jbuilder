@@ -1,0 +1,1 @@
+json.array! @ballot_papers, partial: 'ballot_papers/ballot_paper', as: :ballot_paper

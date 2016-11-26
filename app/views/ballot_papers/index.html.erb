@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Ballot Papers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Vote</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ballot_papers.each do |ballot_paper| %>
+      <tr>
+        <td><%= ballot_paper.vote %></td>
+        <td><%= link_to 'Show', ballot_paper %></td>
+        <td><%= link_to 'Edit', edit_ballot_paper_path(ballot_paper) %></td>
+        <td><%= link_to 'Destroy', ballot_paper, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Ballot Paper', new_ballot_paper_path %>

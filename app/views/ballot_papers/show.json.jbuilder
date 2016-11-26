@@ -1,0 +1,1 @@
+json.partial! "ballot_papers/ballot_paper", ballot_paper: @ballot_paper

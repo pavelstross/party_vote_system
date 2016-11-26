@@ -1,0 +1,2 @@
+module BallotPapersHelper
+end
