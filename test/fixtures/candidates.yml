@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id_person_party_registry: 1
+  first_name: MyString
+  last_name: MyString
+
+two:
+  id_person_party_registry: 1
+  first_name: MyString
+  last_name: MyString
