@@ -54,4 +54,17 @@ gem 'configatron'
 # HTTP client
 gem 'httparty'
 
+# Autorizace
+gem 'omniauth-oauth2', '~> 1.3.1'
+gem 'cancan', '~> 1.6.10'
+
+#Twitter bootstrap
+gem 'bootstrap-sass', '~> 3.3.6'
+gem "font-awesome-rails"
+
+#Stavovy stroj
+gem 'aasm', '~> 4.11.1'
+
+#Scheduler
+gem 'resque'
 

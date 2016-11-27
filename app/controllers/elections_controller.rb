@@ -5,6 +5,10 @@ class ElectionsController < ApplicationController
   # GET /elections.json
   def index
     @elections = Election.all
+
+    if params[:state]
+      @elecions = Election.where(:state, params[:state])
+    end
   end
 
   # GET /elections/1
@@ -69,6 +73,7 @@ class ElectionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def election_params
+      params.require(:election).permit({ :state => ['preparation', 'voting', 'votes_counted']})
       params.require(:election).permit(:election_type, :state, :title, :description, :scope_type, :scope_id_region, :preparation_starts_at, :preparation_ends_at, :voting_starts_at, :voting_ends_at, :public_key)
     end
 end

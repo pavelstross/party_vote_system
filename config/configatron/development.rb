@@ -1,2 +1,5 @@
 
 configatron.registry.uri="http://registr.svobodni.dev:3000"
+
+configatron.registry_oauth2_client_id='efc378e010fea064c7007232615fc4187aa37e094f96a9a4ae88a0a3bd40ee1b'
+configatron.registry_oauth2_client_secret='6919d40bffa8305ecc58622960968b5dcc734fbb23f1bc6f05fe0af7339989f4'
