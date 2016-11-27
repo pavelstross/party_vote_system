@@ -1,72 +1,72 @@
 <%= form_for(election) do |f| %>
   <% if election.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(election.errors.count, "error") %> prohibited this election from being saved:</h2>
-
-      <ul>
-      <% election.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+      <div class="alert alert-danger" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Zavřít"><span aria-hidden="true">&times;</span></button>
+        <h2>Při zakládání voleb <%= plural_form(election.errors.count, "byla nalezena tato", "byly nalezeny tyto", "bylo nalezeno těchto") %> <%= election.errors.count %> <%= plural_form(election.errors.count, "chyba", "chyby", "chyb") %>:</h2>
+        <ul>
+        <% election.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :election_type %>
-    <%= f.text_field :election_type %>
+  <div class="form-group">
+    <%= f.label :election_type, "Typ voleb" %>
+    <%= f.select(:election_type, options_for_select([['Usnesení', :resolution], ['Primárky', :primaries], ['Stranická funkce', :party_role]], @election.election_type), {}, {class: 'form-control'}) %>
   </div>
 
-  <div class="field">
-    <%= f.label :state %>
-    <%= f.text_field :state %>
+  <div class="form-group">
+    <%= f.label :title, "Název" %>
+    <%= f.text_field :title, {:class => "form-control"} %>
   </div>
 
-  <div class="field">
-    <%= f.label :title %>
-    <%= f.text_field :title %>
+  <div class="form-group">
+    <%= f.label :description, "Popis" %>
+    <%= f.text_area :description, {:class => "form-control"} %>
   </div>
 
-  <div class="field">
-    <%= f.label :description %>
-    <%= f.text_area :description %>
+  <div class="form-group">
+    <%= f.label :scope_type, "Působnost" %>
+    <%= f.select(:scope_type, options_for_select([['Celá republika', :general], ['Kraj', :region]], @election.scope_type), {}, {class: 'form-control'}) %>
   </div>
 
-  <div class="field">
-    <%= f.label :scope_type %>
-    <%= f.text_field :scope_type %>
+  <div class="form-group">
+    <%= f.label :scope_id_region, "Kraj" %>
+    <%= f.select(:scope_id_region, options_for_select(Region.all.map { |r| [r.name, r.id] }, @election.scope_id_region), {}, {class: 'form-control'}) %>
   </div>
 
-  <div class="field">
-    <%= f.label :scope_id_region %>
-    <%= f.number_field :scope_id_region %>
+  <div class="form-group">
+    <%= f.label :preparation_starts_at, "Začátek přihlašování kandidátů" %>
+    <div class="form-inline">
+      <%= f.datetime_select :preparation_starts_at, {}, {:class => "form-control"} %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= f.label :preparation_starts_at %>
-    <%= f.datetime_select :preparation_starts_at %>
+  <div class="form-group">
+    <%= f.label :preparation_ends_at, "Konec přihlašování kandidátů" %>
+    <div class="form-inline">
+      <%= f.datetime_select :preparation_ends_at, {}, {:class => "form-control"} %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= f.label :preparation_ends_at %>
-    <%= f.datetime_select :preparation_ends_at %>
+  <div class="form-group">
+    <%= f.label :voting_starts_at, "Začátek hlasování" %>
+    <div class="form-inline">
+      <%= f.datetime_select :voting_starts_at, {}, {:class => "form-control"} %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= f.label :voting_starts_at %>
-    <%= f.datetime_select :voting_starts_at %>
-  </div>
-
-  <div class="field">
-    <%= f.label :voting_ends_at %>
-    <%= f.datetime_select :voting_ends_at %>
-  </div>
-
-  <div class="field">
-    <%= f.label :public_key %>
-    <%= f.text_area :public_key %>
+  <div class="form-group">
+    <%= f.label :voting_ends_at, "Konec hlasování" %>
+    <div class="form-inline">
+      <%= f.datetime_select :voting_ends_at, {}, {:class => "form-control"} %>
+    </div>
   </div>
 
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit "Vytvořit", {:class => 'btn btn-primary'}%>
   </div>
 <% end %>

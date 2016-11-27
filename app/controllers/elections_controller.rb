@@ -1,4 +1,8 @@
 class ElectionsController < ApplicationController
+  
+  require 'encryption' 
+  require 'base64'
+
   before_action :set_election, only: [:show, :edit, :update, :destroy]
 
   # GET /elections
@@ -28,12 +32,28 @@ class ElectionsController < ApplicationController
   # POST /elections
   # POST /elections.json
   def create
-    @election = Election.new(election_params)
+    params = election_params.slice(:title, :description, :election_type, :scope_type, :scope_id_region)
+    params[:preparation_starts_at] = parse_datetime_params(election_params, :preparation_starts_at)
+    params[:preparation_ends_at] = parse_datetime_params(election_params, :preparation_ends_at)
+    params[:voting_starts_at] = parse_datetime_params(election_params, :voting_starts_at)
+    params[:voting_ends_at] = parse_datetime_params(election_params, :voting_ends_at)
 
+    puts params
+
+    @election = Election.new(params)
+
+    #vygeneruje novy par verejny/soukromy klic   
+    public_key, private_key = Encryption::Keypair.generate( 4096 )
+    private_key_file = private_key.to_pem
+
+    # @election.public_key = public_key.to_s
+    @election.public_key = Base64.encode64(public_key.to_s)
+    
     respond_to do |format|
       if @election.save
         format.html { redirect_to @election, notice: 'Election was successfully created.' }
         format.json { render :show, status: :created, location: @election }
+#       send_data private_key_file, filename: "#{@election.id}.pem", type: 'application/x-pem-file'
       else
         format.html { render :new }
         format.json { render json: @election.errors, status: :unprocessable_entity }
@@ -73,7 +93,8 @@ class ElectionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def election_params
-      params.require(:election).permit({ :state => ['preparation', 'voting', 'votes_counted']})
-      params.require(:election).permit(:election_type, :state, :title, :description, :scope_type, :scope_id_region, :preparation_starts_at, :preparation_ends_at, :voting_starts_at, :voting_ends_at, :public_key)
+      params.require(:election).permit({ :state => ['preparation', 'voting', 'votes_counted']},
+        :election_type, :state, :title, :description, :scope_type, :scope_id_region, :preparation_starts_at,
+        :preparation_ends_at, :voting_starts_at, :voting_ends_at, :public_key)
     end
 end

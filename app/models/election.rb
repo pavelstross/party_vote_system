@@ -14,8 +14,48 @@ class Election
   field :public_key, type: String
   has_one :ballot_box
   has_one :participant_list
-  
-  aasm_column :state
+
+  validates :election_type, inclusion: {
+    # usneseni, primarky, funkce ve strane
+    in: %w{resolution primaries party_role},
+    message: "Neznámý typ voleb: %{value}"
+  }
+  validates :title, presence: {
+    allow_blank: false,
+    message: "Název voleb musí být vyplněný"
+  }
+  validates :scope_type, inclusion: {
+    in: %w{region general},
+    message: "Neznámá působnost voleb: %{value}"
+  }
+  validates :scope_id_region, presence: {
+    if: :is_region_scope?,
+    message: "Krajské volby musí mít nastavený kraj své působnosti"
+  }
+  validates :scope_id_region, numericality: {
+    if: :is_region_scope?,
+    only_integer: true
+  }
+  validates :preparation_starts_at, presence: {
+    if: :has_preparation_phase?,
+    message: "Datum začátku přihlašování kandidátů musí být vyplněn"
+  }
+  validates :preparation_ends_at, presence: {
+    if: :has_preparation_phase?,
+    message: "Datum konce přihlašování kandidátů musí být vyplněn"
+  }
+  validates :voting_starts_at, presence: {
+    message: "Datum začátku hlasování musí být vyplněn"
+  }
+  validates :voting_ends_at, presence: {
+    message: "Datum ukončení hlasování musí být vyplněn"
+  }
+  validates :public_key, presence: {
+    allow_blank: false,
+    message: "Veřejný klíč musí být nastaven"
+  }
+
+  aasm.attribute_name :state
 
   aasm do
     state :initialized, :initial => true
@@ -32,6 +72,11 @@ class Election
     event :stop_preparation do
       transitions :from => :preparation, :to => :prepared
     end
+    if (@election_type == :resolution) then
+      event :start_voting do
+        transitions :from => :initialized, :to => :voting
+      end
+    end
 
     event :start_voting do
       transitions :from => :prepared, :to => :voting
@@ -44,5 +89,13 @@ class Election
     event :vote_count do
       transitions :from => :voting, :to => :votes_counted
     end
+  end
+
+  def is_region_scope?
+    scope_type == :region
+  end
+
+  def has_preparation_phase?
+    election_type == :primaries || election_type == :party_role
   end
 end
