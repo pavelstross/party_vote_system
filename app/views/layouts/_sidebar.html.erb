@@ -1,0 +1,33 @@
+<ul class="sidebar-nav">
+  <li class="sidebar-brand">
+    <a id="menu-toggle" class="menu-toggle" href="#menu-toggle">
+      <i class="fa fa-bars" aria-hidden="true"></i> 
+      <span class="sidebar-nav-item-text">MENU</span>
+    </a>
+    <script>
+      $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+      });
+    </script>
+  </li>
+  <% 5.times do |n| %>
+    <%#- http://fontawesome.io/icons/ %>
+    <li>
+      <a class="sidebar-nav-item" href="#">
+        <span class="sidebar-nav-item-icon">
+          <%= fa_icon "angle-right" %>
+        </span>
+        <span class="sidebar-nav-item-text">Section</span>
+      </a>
+    </li>
+  <% end %>
+  <li>
+    <a class="sidebar-nav-item" href="<%= elections_path(state: :voting) %>">
+      <span class="sidebar-nav-item-icon">
+        <%= fa_icon "angle-right" %>
+      </span>
+      <span class="sidebar-nav-item-text">Section</span>
+    </a>
+  </li>
+</ul>

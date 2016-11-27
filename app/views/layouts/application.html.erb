@@ -41,10 +41,9 @@
   <main role="main">
     <div class="container-fluid">
       <div class="row">
-        <% if content_for?(:sidebar) %>
           <div id="wrapper">
             <div id="sidebar-wrapper">
-              <%= content_for :sidebar %>
+              <%= render "layouts/sidebar" %>
             </div>
             <div id="page-content-wrapper">
               <div class="container-fluid">
@@ -56,11 +55,6 @@
               </div>
             </div>
           </div>
-        <% else %>
-          <div class="col-md-12">
-            <%= render "layouts/content" %>
-          </div>
-        <% end %>
       </div>
     </div>
   </main>

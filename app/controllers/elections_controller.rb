@@ -8,10 +8,10 @@ class ElectionsController < ApplicationController
   # GET /elections
   # GET /elections.json
   def index
-    @elections = Election.all
-
     if params[:state]
-      @elecions = Election.where(:state, params[:state])
+      @elections = Election.where(state: params[:state])
+    else
+      @elections = Election.all
     end
   end
 
