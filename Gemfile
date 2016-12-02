@@ -65,8 +65,5 @@ gem "font-awesome-rails"
 #Stavovy stroj
 gem 'aasm', '~> 4.11.1'
 
-#Scheduler
-gem 'resque'
-
 # Sifrovani
 gem 'encryption'

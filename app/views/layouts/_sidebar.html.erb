@@ -11,23 +11,29 @@
       });
     </script>
   </li>
-  <% 5.times do |n| %>
-    <%#- http://fontawesome.io/icons/ %>
-    <li>
-      <a class="sidebar-nav-item" href="#">
-        <span class="sidebar-nav-item-icon">
-          <%= fa_icon "angle-right" %>
-        </span>
-        <span class="sidebar-nav-item-text">Section</span>
-      </a>
-    </li>
-  <% end %>
   <li>
     <a class="sidebar-nav-item" href="<%= elections_path(state: :voting) %>">
       <span class="sidebar-nav-item-icon">
         <%= fa_icon "angle-right" %>
       </span>
-      <span class="sidebar-nav-item-text">Section</span>
+      <span class="sidebar-nav-item-text">Probíhající volby</span>
+    </a>
+  </li>
+  <li>
+    <a class="sidebar-nav-item" href="<%= elections_path(state: :preparation) %>">
+      <span class="sidebar-nav-item-icon">
+        <%= fa_icon "angle-right" %>
+      </span>
+      <span class="sidebar-nav-item-text">Přihlašování kandidátů</span>
+    </a>
+  </li>
+  <li>
+    <a class="sidebar-nav-item" href="<%= elections_path(state: :votes_counted) %>">
+      <span class="sidebar-nav-item-icon">
+        <%= fa_icon "angle-right" %>
+      </span>
+      <span class="sidebar-nav-item-text">Uplynulé volby</span>
     </a>
   </li>
 </ul>
+

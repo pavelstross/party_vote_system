@@ -72,7 +72,7 @@ class Election
     event :stop_preparation do
       transitions :from => :preparation, :to => :prepared
     end
-    if (@election_type == :resolution) then
+    if (!has_preparation_phase) then
       event :start_voting do
         transitions :from => :initialized, :to => :voting
       end
@@ -87,7 +87,7 @@ class Election
     end
     
     event :vote_count do
-      transitions :from => :voting, :to => :votes_counted
+      transitions :from => :voting_ended, :to => :votes_counted
     end
   end
 
