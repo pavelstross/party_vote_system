@@ -72,7 +72,8 @@ class Election
     event :stop_preparation do
       transitions :from => :preparation, :to => :prepared
     end
-    if (!has_preparation_phase) then
+    
+    if (!@has_preparation_phase) then
       event :start_voting do
         transitions :from => :initialized, :to => :voting
       end

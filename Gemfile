@@ -67,3 +67,8 @@ gem 'aasm', '~> 4.11.1'
 
 # Sifrovani
 gem 'encryption'
+
+#Schedular
+gem 'sidekiq'
+gem 'sinatra', require: false
+gem 'slim'
