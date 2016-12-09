@@ -56,7 +56,7 @@ gem 'httparty'
 
 # Autorizace
 gem 'omniauth-oauth2', '~> 1.3.1'
-gem 'cancan', '~> 1.6.10'
+gem 'cancan', '~> 1.6.10' 
 
 #Twitter bootstrap
 gem 'bootstrap-sass', '~> 3.3.6'
@@ -70,5 +70,5 @@ gem 'encryption'
 
 #Schedular
 gem 'sidekiq'
-gem 'sinatra', require: false
+gem 'sinatra', :require => nil
 gem 'slim'

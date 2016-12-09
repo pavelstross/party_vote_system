@@ -66,23 +66,19 @@ class Election
     state :votes_counted
     
     event :start_preparation do
-      transitions :from => :initialized, :to => :preparation
+        transitions :from => :initialized, :to => :preparation, :if => :has_preparation_phase?
     end
 
     event :stop_preparation do
-      transitions :from => :preparation, :to => :prepared
-    end
-    
-    if (!@has_preparation_phase) then
-      event :start_voting do
-        transitions :from => :initialized, :to => :voting
-      end
+        transitions :from => :preparation, :to => :prepared, :if => :has_preparation_phase?
     end
 
-    event :start_voting do
-      transitions :from => :prepared, :to => :voting
-    end
     
+    event :start_voting do
+      transitions :from => :prepared, :to => :voting, :if => :has_preparation_phase?
+      transitions :from  => :initialized, :to => :voting, :unless => :has_preparation_phase?
+    end
+
     event :stop_voting do
       transitions :from => :voting, :to => :voting_ended
     end
@@ -97,6 +93,7 @@ class Election
   end
 
   def has_preparation_phase?
-    election_type == :primaries || election_type == :party_role
+    self.election_type == 'primaries' || self.election_type == 'party_role'
   end
+
 end
