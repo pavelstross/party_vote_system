@@ -1,7 +1,6 @@
 class ElectionsController < ApplicationController
   
-  require 'encryption' 
-  require 'base64'
+  require 'encryption'
 
   before_action :set_election, only: [:show, :edit, :update, :destroy]
 
@@ -41,24 +40,25 @@ class ElectionsController < ApplicationController
     puts params
 
     @election = Election.new(params)
+    @election.ballot_box
+    @election.participant_list
 
     #vygeneruje novy par verejny/soukromy klic   
     public_key, private_key = Encryption::Keypair.generate( 4096 )
-    private_key_file = private_key.to_pem
 
-    # @election.public_key = public_key.to_s
-    @election.public_key = Base64.encode64(public_key.to_s)
+    @election.public_key = public_key.to_s
+    @shown_private_key = private_key.to_s
     
     respond_to do |format|
-      if @election.save
-        format.html { redirect_to @election, notice: 'Election was successfully created.' }
+      if (@election.save && @election.ballot_box.save && @election.participant_list.save)
+        format.html { render :show_created}
         format.json { render :show, status: :created, location: @election }
-#       send_data private_key_file, filename: "#{@election.id}.pem", type: 'application/x-pem-file'
       else
         format.html { render :new }
         format.json { render json: @election.errors, status: :unprocessable_entity }
       end
     end
+    @shown_private_key = nil
   end
 
   # PATCH/PUT /elections/1
@@ -66,7 +66,7 @@ class ElectionsController < ApplicationController
   def update
     respond_to do |format|
       if @election.update(election_params)
-        format.html { redirect_to @election, notice: 'Election was successfully updated.' }
+        format.html { render :show, notice: 'Election was successfully updated.' }
         format.json { render :show, status: :ok, location: @election }
       else
         format.html { render :edit }

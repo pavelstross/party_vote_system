@@ -12,8 +12,8 @@ class Election
   field :voting_starts_at, type: Time
   field :voting_ends_at, type: Time
   field :public_key, type: String
-  has_one :ballot_box
-  has_one :participant_list
+  has_one :ballot_box, autobuild: true, dependent: :delete
+  has_one :participant_list, autobuild: true, dependent: :delete
 
   validates :election_type, inclusion: {
     # usneseni, primarky, funkce ve strane
