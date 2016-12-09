@@ -32,9 +32,11 @@
         <td><%= election.voting_starts_at %></td>
         <td><%= election.voting_ends_at %></td>
         <td><%= election.public_key %></td>
-        <td><%= link_to 'Show', election %></td>
-        <td><%= link_to 'Edit', edit_election_path(election) %></td>
-        <td><%= link_to 'Destroy', election, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Volební urna', election.ballot_box, {:class => 'btn btn-primary'} %></td>
+        <td><%= link_to 'Volební protokol', election.ballot_box, {:class => 'btn btn-primary'}  %></td>
+        <td><%= link_to 'Show', election, {:class => 'btn btn-primary'}  %></td>
+        <td><%= link_to 'Destroy', election, { method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-primary'}  %></td>
+
       </tr>
     <% end %>
   </tbody>

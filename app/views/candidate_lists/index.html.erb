@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Candidate Lists</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @candidate_lists.each do |candidate_list| %>
+      <tr>
+        <td><%= link_to 'Show', candidate_list %></td>
+        <td><%= link_to 'Edit', edit_candidate_list_path(candidate_list) %></td>
+        <td><%= link_to 'Destroy', candidate_list, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Candidate List', new_candidate_list_path %>

@@ -1,0 +1,1 @@
+json.partial! "ballot_boxes/ballot_box", ballot_box: @ballot_box

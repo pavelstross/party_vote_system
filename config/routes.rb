@@ -1,5 +1,7 @@
 
 Rails.application.routes.draw do
+  resources :candidate_lists
+  resources :ballot_boxes
   resources :ballot_papers
   resources :candidates
   resources :elections

@@ -57,5 +57,4 @@
   <%= @shown_private_key %>
 </p>
 
-<%= link_to 'Edit', edit_election_path(@election) %> |
-<%= link_to 'Back', elections_path %>
+<%= button_to 'Back', elections_path, {:class => 'btn btn-primary'} %>

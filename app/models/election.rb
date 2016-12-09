@@ -14,6 +14,7 @@ class Election
   field :public_key, type: String
   has_one :ballot_box, autobuild: true, dependent: :delete
   has_one :participant_list, autobuild: true, dependent: :delete
+  has_one :candidate_list, autobuild: true, dependent: :delete
 
   validates :election_type, inclusion: {
     # usneseni, primarky, funkce ve strane

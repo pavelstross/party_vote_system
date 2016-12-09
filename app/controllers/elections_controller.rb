@@ -42,6 +42,7 @@ class ElectionsController < ApplicationController
     @election = Election.new(params)
     @election.ballot_box
     @election.participant_list
+    @election.candidate_list
 
     #vygeneruje novy par verejny/soukromy klic   
     public_key, private_key = Encryption::Keypair.generate( 4096 )

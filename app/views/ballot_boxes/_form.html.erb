@@ -1,0 +1,17 @@
+<%= form_for(ballot_box) do |f| %>
+  <% if ballot_box.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(ballot_box.errors.count, "error") %> prohibited this ballot_box from being saved:</h2>
+
+      <ul>
+      <% ballot_box.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

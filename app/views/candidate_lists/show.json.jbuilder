@@ -1,0 +1,1 @@
+json.partial! "candidate_lists/candidate_list", candidate_list: @candidate_list

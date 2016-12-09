@@ -1,0 +1,2 @@
+module BallotBoxHelper
+end
