@@ -1,35 +1,42 @@
 <h1>Administrace voleb</h1>
 
-<table border="1">
+<table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th>Election type</th>
-      <th>State</th>
-      <th>Title</th>
-      <th>Description</th>
-      <th>Scope type</th>
-      <th>Scope id region</th>
-      <th>Preparation starts at</th>
-      <th>Preparation ends at</th>
-      <th>Voting starts at</th>
-      <th>Voting ends at</th>
+      <th>Typ</th>
+      <th>Název</th>
+      <th>Popis</th>
+      <th>Působnost</th>
+      <th>Přihlašování kandidátů</th>
+      <th>Hlasování</th>
       <th colspan="3"></th>
     </tr>
   </thead>
 
   <tbody>
-    <% @elections.each do |election| %>
+    <% if @elections.each do |election| %>
       <tr>
-        <td><%= election.election_type %></td>
-        <td><%= election.state %></td>
+        <td><%=t "election_type.#{election.election_type}" %></td>
         <td><%= election.title %></td>
         <td><%= election.description %></td>
-        <td><%= election.scope_type %></td>
-        <td><%= election.scope_id_region %></td>
-        <td><% if election.has_preparation_phase? %><%= election.preparation_starts_at %><% end %></td>
-        <td><% if election.has_preparation_phase? %><%= election.preparation_ends_at %><% end %></td>
-        <td><%= election.voting_starts_at %></td>
-        <td><%= election.voting_ends_at %></td>
+        <td>
+          <% case election.scope_type %>
+            <% when 'general' then %>
+              Celorepublikové
+            <% when 'region' then %>
+              Krajské / <%= Region.find(election.scope_id_region).name %>
+          <% end %>
+        </td>
+        <td>
+          <% if election.has_preparation_phase? %>
+            <strong>od</strong> <%= format_date election.preparation_starts_at %> <strong>do</strong> <%= format_date election.preparation_ends_at %>
+          <% else %>
+            <%= fa_icon 'times' %>
+          <% end %>
+        </td>
+        <td>
+          <strong>od</strong> <%= format_date election.voting_starts_at %> <strong>do</strong> <%= format_date election.voting_ends_at %>
+        </td>
         <td><%= link_to 'Volební urna', election.ballot_box, {:class => 'btn btn-primary'} %>
         <% if election.state = 'votes_counted'%><%= link_to 'Volební protokol', election.ballot_box, {:class => 'btn btn-primary'}  %><% end %>
         <%= link_to 'Kandidátní listina', election.candidate_list, {:class => 'btn btn-primary'}  %>
@@ -38,6 +45,12 @@
         <%= link_to 'Vyhodnotit volby', "elections/#{election.id}/count_votes", {:class => 'btn btn-primary'}  %>
         <%= link_to 'Zrušit volby', election, { method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-primary'}  %>
 
+      </tr>
+    <% end.empty? %>
+      <tr>
+        <td colspan="7" class="info">
+          Seznam voleb je prázdný
+        </td>
       </tr>
     <% end %>
   </tbody>

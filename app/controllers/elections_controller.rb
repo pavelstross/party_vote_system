@@ -32,8 +32,10 @@ class ElectionsController < ApplicationController
   # POST /elections.json
   def create
     params = election_params.slice(:eligible_seats, :title, :description, :election_type, :scope_type, :scope_id_region)
-    params[:preparation_starts_at] = parse_datetime_params(election_params, :preparation_starts_at)
-    params[:preparation_ends_at] = parse_datetime_params(election_params, :preparation_ends_at)
+    if election_params[:election_type] != 'resolution'
+      params[:preparation_starts_at] = parse_datetime_params(election_params, :preparation_starts_at)
+      params[:preparation_ends_at] = parse_datetime_params(election_params, :preparation_ends_at)
+    end
     params[:voting_starts_at] = parse_datetime_params(election_params, :voting_starts_at)
     params[:voting_ends_at] = parse_datetime_params(election_params, :voting_ends_at)
 

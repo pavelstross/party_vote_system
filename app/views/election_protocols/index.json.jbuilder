@@ -1,0 +1,1 @@
+json.array! @election_protocols, partial: 'election_protocols/election_protocol', as: :election_protocol

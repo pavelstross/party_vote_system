@@ -1,0 +1,17 @@
+<%= form_for(election_protocol) do |f| %>
+  <% if election_protocol.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(election_protocol.errors.count, "error") %> prohibited this election_protocol from being saved:</h2>
+
+      <ul>
+      <% election_protocol.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

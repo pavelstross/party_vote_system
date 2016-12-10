@@ -17,7 +17,8 @@ class Election
   has_one :ballot_box, autobuild: true, dependent: :delete
   has_one :participant_list, autobuild: true, dependent: :delete
   has_one :candidate_list, autobuild: true, dependent: :delete
-  
+  has_one :election_protocol, autobuild: true, dependent: :delete
+ 
   validates :election_type, inclusion: {
     # usneseni, primarky, funkce ve strane
     in: %w{resolution primaries party_role},
@@ -31,10 +32,6 @@ class Election
     in: %w{region general},
     message: "Neznámá působnost voleb: %{value}"
   }
-  validates :scope_id_region, presence: {
-    if: :is_region_scope?,
-    message: "Krajské volby musí mít nastavený kraj své působnosti"
-  }
 
   validates :eligible_seats, presence: {
     if: :has_candidate_list?,
@@ -43,7 +40,8 @@ class Election
 
   validates :scope_id_region, numericality: {
     if: :is_region_scope?,
-    only_integer: true
+    only_integer: true,
+    message: "Krajské volby musí mít nastavený kraj své působnosti"
   }
   validates :preparation_starts_at, presence: {
     if: :has_preparation_phase?,
@@ -98,7 +96,7 @@ class Election
   end
 
   def is_region_scope?
-    scope_type == :region
+    scope_type == 'region'
   end
 
   def has_preparation_phase?

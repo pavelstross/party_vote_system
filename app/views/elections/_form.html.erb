@@ -1,4 +1,4 @@
-<%= form_for(election) do |f| %>
+<%= form_for(election, :html => {:id => "election_form_#{election.id}"}) do |f| %>
   <% if election.errors.any? %>
     <div id="error_explanation">
       <div class="alert alert-danger" role="alert">
@@ -13,14 +13,9 @@
     </div>
   <% end %>
 
-  <div class="form-group">
+  <div class="form-group election_type">
     <%= f.label :election_type, "Typ voleb" %>
     <%= f.select(:election_type, options_for_select([['Usnesení', :resolution], ['Primárky', :primaries], ['Stranická funkce', :party_role]], @election.election_type), {}, {class: 'form-control'}) %>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :eligible_seats, "Počet volitelných míst" %>
-    <%= f.text_field :eligible_seats, {:class => "form-control"} %>
   </div>
 
   <div class="form-group">
@@ -33,24 +28,29 @@
     <%= f.text_area :description, {:class => "form-control"} %>
   </div>
 
-  <div class="form-group">
+  <div class="form-group eligible_seats">
+    <%= f.label :eligible_seats, "Počet volitelných míst" %>
+    <%= f.text_field :eligible_seats, {:class => "form-control"} %>
+  </div>
+
+  <div class="form-group scope_type">
     <%= f.label :scope_type, "Působnost" %>
     <%= f.select(:scope_type, options_for_select([['Celá republika', :general], ['Kraj', :region]], @election.scope_type), {}, {class: 'form-control'}) %>
   </div>
 
-  <div class="form-group">
+  <div class="form-group scope_id_region">
     <%= f.label :scope_id_region, "Kraj" %>
-    <%= f.select(:scope_id_region, options_for_select(Region.all.map { |r| [r.name, r.id] }, @election.scope_id_region), {}, {class: 'form-control'}) %>
+    <%= f.select(:scope_id_region, options_for_select(Region.all.map { |r| [r.name, r.id] }, @election.scope_id_region), {include_blank: true}, {class: 'form-control'}) %>
   </div>
 
-  <div class="form-group">
+  <div class="form-group preparation_starts_at">
     <%= f.label :preparation_starts_at, "Začátek přihlašování kandidátů" %>
     <div class="form-inline">
       <%= f.datetime_select :preparation_starts_at, {}, {:class => "form-control"} %>
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group preparation_ends_at">
     <%= f.label :preparation_ends_at, "Konec přihlašování kandidátů" %>
     <div class="form-inline">
       <%= f.datetime_select :preparation_ends_at, {}, {:class => "form-control"} %>
@@ -74,4 +74,7 @@
   <div class="actions">
     <%= f.submit "Vytvořit", {:class => 'btn btn-primary'}%>
   </div>
+  <script>
+    new app.elections("#election_form_<%= election.id %>");
+  </script>
 <% end %>

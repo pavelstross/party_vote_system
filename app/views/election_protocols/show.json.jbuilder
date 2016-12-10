@@ -1,0 +1,1 @@
+json.partial! "election_protocols/election_protocol", election_protocol: @election_protocol

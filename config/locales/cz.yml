@@ -1,0 +1,7 @@
+cs:
+  errors:
+    format: "%{message}"
+  election_type:
+    resolution: Usnesení
+    primaries: Primárky
+    party_role: Stranická funkce

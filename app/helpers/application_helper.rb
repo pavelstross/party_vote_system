@@ -13,4 +13,8 @@ module ApplicationHelper
     return b if (count < 5)
     return c
   end
+
+  def format_date(date)
+    date.strftime '%-d.%-m.%Y %H:%M'
+  end
 end

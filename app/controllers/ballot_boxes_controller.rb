@@ -10,6 +10,7 @@ class BallotBoxesController < ApplicationController
   # GET /ballot_boxes/1
   # GET /ballot_boxes/1.json
   def show
+    @ballot_papers = @ballot_box.ballot_papers
   end
 
   # GET /ballot_boxes/new

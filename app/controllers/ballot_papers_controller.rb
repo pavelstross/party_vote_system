@@ -26,26 +26,24 @@ class BallotPapersController < ApplicationController
   # POST /ballot_papers
   # POST /ballot_papers.json
   def create
-    #@ballot_paper = BallotPaper.new(ballot_paper_params)
-
-    puts params['foobar']
-
-    puts "\n\n\\n\n\n\n\n\n\n\ DEBUDDEBUDDEBUDDEBUDDEBUDDEBUD\n\n\n\n\n\n"
-    params['candidates_ids'].each do |p|
-      puts "#{p}"
+    @ballot_paper = BallotPaper.new 
+    choices = params[:choices]
+    @ballot_paper.vote_hash = hash_of_data(choices)
+    vote = [ choices , @ballot_paper.vote_hash ]
+    @ballot_paper.encrypted_vote = vote
+    @ballot_paper.encrypted_vote_hash = hash_of_data(@ballot_paper.encrypted_vote)
+    
+    puts "\n\n\n\n\DEBUG\n#{params[:choices]} DEBUG\n\n#{choices}\n#{@ballot_paper.vote_hash}\n#{vote}\n#{@ballot_paper.encrypted_vote}\n#{@ballot_paper.encrypted_vote_hash}\n\n\n\n\DEBUG DEBUG"
+   
+    respond_to do |format|
+      if @ballot_paper
+        format.html { redirect_to "/elections/?state=voting" , notice: 'Váš hlas byl uspěšně vložen do volební urny.' }
+        format.json { render :show, status: :created, location: @ballot_paper }
+      else
+        format.html { render :new }
+        format.json { render json: @ballot_paper.errors, status: :unprocessable_entity }
+      end
     end
-    puts "\n\n\\n\n\n\n\n\n\n\ DEBUDDEBUDDEBUDDEBUDDEBUDDEBUD\n\n\n\n\n\n"
-
-
-    #respond_to do |format|
-    #  if @ballot_paper
-    #    format.html { redirect_to @ballot_paper, notice: 'Ballot paper was successfully created.' }
-    #    format.json { render :show, status: :created, location: @ballot_paper }
-    #  else
-    #    format.html { render :new }
-    #    format.json { render json: @ballot_paper.errors, status: :unprocessable_entity }
-    #  end
-    #end
   end
 
   # PATCH/PUT /ballot_papers/1
@@ -78,12 +76,16 @@ class BallotPapersController < ApplicationController
       @ballot_paper = BallotPaper.find(params[:id])
     end
 
+    def hash_of_data(data)
+       Digest::SHA2.new(512).hexdigest(data.to_s + SecureRandom.hex(64))
+    end
+
     def set_election
       @election = Election.find(params[:election])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def ballot_paper_params
-      params.permit(:votes, :foobar)
+      params.permit(:votes, :choices)
     end
 end

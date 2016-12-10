@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Election Protocols</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @election_protocols.each do |election_protocol| %>
+      <tr>
+        <td><%= link_to 'Show', election_protocol %></td>
+        <td><%= link_to 'Edit', edit_election_protocol_path(election_protocol) %></td>
+        <td><%= link_to 'Destroy', election_protocol, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Election Protocol', new_election_protocol_path %>
