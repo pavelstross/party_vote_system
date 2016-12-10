@@ -1,5 +1,23 @@
-<h1>New Ballot Paper</h1>
+<h1>Hlasovací lístek</h1>
 
-<%= render 'form', ballot_paper: @ballot_paper %>
+<p>
+	<strong>Název voleb:</strong>
+	<%= @election.title %>
+</p>
 
-<%= link_to 'Back', ballot_papers_path %>
+<p>
+	<strong>Popis voleb:</strong>
+	<%= @election.description %>
+</p>
+
+<% if @election.counting_rules == 'resolution' %>
+	<%= render "resolution_form", { ballot_paper: @ballot_paper, election: @election } %>
+<% end %>
+
+<% if @election.counting_rules == 'candidates_approval' %>
+	<%= render "candidates_approval_form", { ballot_paper: @ballot_paper, election: @election } %>
+<% end %>
+
+<% if @election.counting_rules == 'candidates_choosing' %>
+	<%= render "candidates_choosing_form", { ballot_paper: @ballot_paper, election: @election } %>
+<% end %>

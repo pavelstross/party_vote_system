@@ -34,7 +34,7 @@
         <% if election.state = 'votes_counted'%><%= link_to 'Volební protokol', election.ballot_box, {:class => 'btn btn-primary'}  %><% end %>
         <%= link_to 'Kandidátní listina', election.candidate_list, {:class => 'btn btn-primary'}  %>
         <%= link_to 'Detaily voleb', election, {:class => 'btn btn-primary'}  %>
-        <%= link_to 'Hlasovat', new_ballot_paper_path(:candidate_list => election.candidate_list), {:class => 'btn btn-primary'}  %>
+        <%= link_to 'Hlasovat', new_ballot_paper_path(:election => election), {:class => 'btn btn-primary'}  %>
         <%= link_to 'Vyhodnotit volby', "elections/#{election.id}/count_votes", {:class => 'btn btn-primary'}  %>
         <%= link_to 'Zrušit volby', election, { method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-primary'}  %>
 

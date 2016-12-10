@@ -8,6 +8,7 @@ class Election
   field :scope_type, type: String
   field :scope_id_region, type: Integer
   field :eligible_seats, type: Integer
+  field :counting_rules, type: String
   field :preparation_starts_at, type: Time
   field :preparation_ends_at, type: Time
   field :voting_starts_at, type: Time
@@ -110,4 +111,17 @@ class Election
     self.election_type == 'resolution'
   end
 
+  def is_more_candidates_than_eligible_seats?
+    self.reload
+    candidates = self.candidate_list.candidates
+    (self.eligible_seats < candidates.count) ? true : false
+  end
+
+  def set_counting_rules
+    case 
+      when is_election_type_resolution? then; self.counting_rules = 'resolution'
+      when (!is_election_type_resolution?) && is_more_candidates_than_eligible_seats? then self.counting_rules = 'candidates_choosing'
+      when (!is_election_type_resolution?) && (!is_more_candidates_than_eligible_seats?) then self.counting_rules = 'candidates_approval'
+    end
+  end
 end
