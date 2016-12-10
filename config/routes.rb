@@ -15,4 +15,10 @@ Rails.application.routes.draw do
   get '/auth/:provider/callback', to: 'sessions#create'
   get '/sessions/destroy'
   
+  post '/candidate_lists/:id/submit_candidacy', to: 'candidate_lists#submit_candidacy'
+  delete '/candidate_lists/:id/destroy_candidacy/:candidate_id', to: 'candidate_lists#destroy_candidacy'
+
+  get 'elections/:id/count_votes', to: 'elections#count_votes'
+  post 'elections/:id/count_votes', to: 'elections#count_votes'
+
 end

@@ -7,6 +7,7 @@ class Election
   field :description, type: String
   field :scope_type, type: String
   field :scope_id_region, type: Integer
+  field :eligible_seats, type: Integer
   field :preparation_starts_at, type: Time
   field :preparation_ends_at, type: Time
   field :voting_starts_at, type: Time
@@ -15,7 +16,7 @@ class Election
   has_one :ballot_box, autobuild: true, dependent: :delete
   has_one :participant_list, autobuild: true, dependent: :delete
   has_one :candidate_list, autobuild: true, dependent: :delete
-
+  
   validates :election_type, inclusion: {
     # usneseni, primarky, funkce ve strane
     in: %w{resolution primaries party_role},
@@ -33,6 +34,12 @@ class Election
     if: :is_region_scope?,
     message: "Krajské volby musí mít nastavený kraj své působnosti"
   }
+
+  validates :eligible_seats, presence: {
+    if: :has_candidate_list?,
+    message: "Primární volby a volby do funkcí ve straně musí mít nastavený počet volitelných míst"
+  }
+
   validates :scope_id_region, numericality: {
     if: :is_region_scope?,
     only_integer: true
@@ -84,7 +91,7 @@ class Election
       transitions :from => :voting, :to => :voting_ended
     end
     
-    event :vote_count do
+    event :count_votes do
       transitions :from => :voting_ended, :to => :votes_counted
     end
   end
@@ -95,6 +102,12 @@ class Election
 
   def has_preparation_phase?
     self.election_type == 'primaries' || self.election_type == 'party_role'
+  end
+
+  alias :has_candidate_list? :has_preparation_phase?
+
+  def is_election_type_resolution?
+    self.election_type == 'resolution'
   end
 
 end

@@ -31,13 +31,11 @@ class ElectionsController < ApplicationController
   # POST /elections
   # POST /elections.json
   def create
-    params = election_params.slice(:title, :description, :election_type, :scope_type, :scope_id_region)
+    params = election_params.slice(:eligible_seats, :title, :description, :election_type, :scope_type, :scope_id_region)
     params[:preparation_starts_at] = parse_datetime_params(election_params, :preparation_starts_at)
     params[:preparation_ends_at] = parse_datetime_params(election_params, :preparation_ends_at)
     params[:voting_starts_at] = parse_datetime_params(election_params, :voting_starts_at)
     params[:voting_ends_at] = parse_datetime_params(election_params, :voting_ends_at)
-
-    puts params
 
     @election = Election.new(params)
     @election.ballot_box
@@ -51,8 +49,9 @@ class ElectionsController < ApplicationController
     @shown_private_key = private_key.to_s
     
     respond_to do |format|
-      if (@election.save && @election.ballot_box.save && @election.participant_list.save)
-        format.html { render :show_created}
+      if (@election.save && @election.ballot_box.save && @election.participant_list.save && @election.candidate_list.save)
+
+        format.html { render :show_created, notice: 'Volby byly vytvořeny.'}
         format.json { render :show, status: :created, location: @election }
       else
         format.html { render :new }
@@ -61,6 +60,27 @@ class ElectionsController < ApplicationController
     end
     @shown_private_key = nil
   end
+
+  #before_action :verify request_type
+  def count_votes
+    case request.method_symbol
+    #GET /elections/:id/count_votes/  
+    when :get
+      set_election
+      respond_to do |format|
+        format.html { render :count_votes }
+      end
+    when :post
+      #POST /elections/:id/count_votes/
+
+    end
+  end
+
+  #POST /elections/:id/count_votes/
+  #def count_votes
+  #  puts "blablabla"
+  #end
+
 
   # PATCH/PUT /elections/1
   # PATCH/PUT /elections/1.json
@@ -95,7 +115,7 @@ class ElectionsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def election_params
       params.require(:election).permit({ :state => ['preparation', 'voting', 'votes_counted']},
-        :election_type, :state, :title, :description, :scope_type, :scope_id_region, :preparation_starts_at,
+        :election_type, :eligible_seats, :state, :title, :description, :scope_type, :scope_id_region, :preparation_starts_at,
         :preparation_ends_at, :voting_starts_at, :voting_ends_at, :public_key)
     end
 end

@@ -27,7 +27,8 @@ module OmniAuth
       info do
         {
           :name => raw_info['person']['name'],
-          :email => raw_info['person']['email']
+          :email => raw_info['person']['email'],
+          :party_registry_profile => raw_info['person']
         }
       end
 

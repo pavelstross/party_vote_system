@@ -1,4 +1,28 @@
 <p id="notice"><%= notice %></p>
 
-<%= link_to 'Edit', edit_candidate_list_path(@candidate_list) %> |
-<%= link_to 'Back', candidate_lists_path %>
+<table>
+  <thead>
+    <tr>
+      <th>Foto</th>
+      <th>Jméno</th>
+      <th>CV</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @candidates.each do |candidate| %>
+      <tr>
+        <td><%= candidate.id %></td>
+        <td><%= candidate.first_name %> <%= candidate.last_name %></td>
+        <td></td>
+        <td><%= link_to 'Zrušit kandidaturu', candidate_list_path+'/destroy_candidacy/'+candidate.id, { method: :delete, data: { confirm: 'Opravdu chcete odebrat kandidáta ?' }, :class => 'btn btn-primary'}  %></td>
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<%= link_to 'Podat kandidaturu', candidate_list_path+'/submit_candidacy', { method: :post, 
+	data: { confirm: 'Jste si jistí, že chcete podat kandidaturu ?' }, :class => 'btn btn-primary'}  %>
+<%= link_to 'Přihlásit se do jiných voleb', elections_path(state: :preparation), {:class => 'btn btn-primary'} %>

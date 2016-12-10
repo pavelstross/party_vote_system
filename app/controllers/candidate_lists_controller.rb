@@ -10,6 +10,7 @@ class CandidateListsController < ApplicationController
   # GET /candidate_lists/1
   # GET /candidate_lists/1.json
   def show
+    @candidates = @candidate_list.candidates
   end
 
   # GET /candidate_lists/new
@@ -34,6 +35,29 @@ class CandidateListsController < ApplicationController
         format.html { render :new }
         format.json { render json: @candidate_list.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  #POST /candidate_lists/1/submit_candidacy
+  def submit_candidacy
+    set_candidate_list
+    user = current_user['party_registry_profile']
+    @candidate_list.candidates.build(:id_person_party_registry => user['id'], :first_name => user['first_name'], :last_name => user['last_name'])
+    @candidate_list.save
+    respond_to do |format|
+      format.html { redirect_to @candidate_list, notice: 'Vaše podání kandidatury bylo zaznamenáno.'}
+      format.json { render :show, location: @candidate_list }
+    end
+  end
+
+  #DELETE /candidate_lists/:id/destroy_candidacy/:candidate.id
+  def destroy_candidacy
+    set_candidate_list
+    candidate = @candidate_list.candidates.find(params[:candidate_id])
+    candidate.destroy
+    respond_to do |format|
+      format.html { redirect_to @candidate_list, notice: 'Kandidát byl odstraněn.'}
+      format.json { render :show, location: @candidate_list }
     end
   end
 

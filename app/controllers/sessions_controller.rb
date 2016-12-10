@@ -2,7 +2,12 @@ class SessionsController < ApplicationController
   def create
     session[:user] = {
       id: auth_hash[:uid],
-      name: auth_hash[:info][:name]
+      name: auth_hash[:info][:name],
+      email: auth_hash[:info][:email],
+      party_registry_profile: auth_hash[:info][:party_registry_profile],
+      info: auth_hash[:extra][:raw_info],
+      access_token: auth_hash[:info][:access_token],
+      refresh_token: auth_hash[:info][:refresh_token]
     }
     redirect_to '/'
   end

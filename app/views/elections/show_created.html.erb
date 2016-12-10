@@ -2,7 +2,10 @@
   <strong>Election type:</strong>
   <%= @election.election_type %>
 </p>
-
+<p>
+  <strong>Eligible_seats:</strong>
+  <%= @election.eligible_seats %>
+<p>
 <p>
   <strong>State:</strong>
   <%= @election.state %>
@@ -57,4 +60,4 @@
   <%= @shown_private_key %>
 </p>
 
-<%= button_to 'Back', elections_path, {:class => 'btn btn-primary'} %>
+<%= link_to'Back', elections_path, {:class => 'btn btn-primary'} %>
