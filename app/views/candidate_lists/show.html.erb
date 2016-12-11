@@ -12,7 +12,9 @@
         <td><%= candidate.full_name %></td>
         <td>
           <% if @candidate_list.election.state == 'preparation' %>
-            <%= link_to 'Zrušit kandidaturu', candidate_list_path+'/destroy_candidacy/'+candidate.id, { method: :delete, data: { confirm: 'Opravdu chcete odebrat kandidáta ?' }, :class => 'btn btn-primary pull-right'}  %>
+            <% if can? :destroy_candidacy, @candidate_list %>
+              <%= link_to 'Zrušit kandidaturu', candidate_list_path+'/destroy_candidacy/'+candidate.id, { method: :delete, data: { confirm: 'Opravdu chcete odebrat kandidáta ?' }, :class => 'btn btn-primary pull-right'}  %>
+            <% end %>
           <% end %>
         </td>
       </tr>
@@ -28,7 +30,8 @@
 
 
 <% if @candidate_list.election.state == 'preparation' then %>
-  <%= link_to 'Podat kandidaturu', candidate_list_path+'/submit_candidacy', { method: :post, 
+  <% if can? :submit_candidacy, @candidate_list %>
+    <%= link_to 'Podat kandidaturu', candidate_list_path+'/submit_candidacy', { method: :post, 
   data: { confirm: 'Jste si jistí, že chcete podat kandidaturu ?' }, :class => 'btn btn-primary'}  %>
-  <%= link_to 'Přihlásit se do jiných voleb', elections_path(state: :preparation), {:class => 'btn btn-primary'} %>
+  <% end %>
 <% end %>

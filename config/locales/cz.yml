@@ -5,3 +5,8 @@ cs:
     resolution: Usnesení
     primaries: Primárky
     party_role: Stranická funkce
+  election_state:
+    title:
+      voting: Probíhající volby
+      preparation: Přihlašování kandidátů
+      votes_counted: Uplynulé volby

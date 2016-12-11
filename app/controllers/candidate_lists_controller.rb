@@ -1,5 +1,5 @@
 class CandidateListsController < ApplicationController
-  before_action :set_candidate_list, only: [:show, :edit, :update, :destroy]
+  before_action :set_candidate_list, only: [:show, :edit, :update, :destroy, :submit_candidacy, :destroy_candidacy]
 
   # GET /candidate_lists
   # GET /candidate_lists.json
@@ -44,7 +44,7 @@ class CandidateListsController < ApplicationController
 
   #POST /candidate_lists/1/submit_candidacy
   def submit_candidacy
-    set_candidate_list
+    authorize! :submit_candidacy, @candidate_list
     user = current_user['party_registry_profile']
     @candidate_list.candidates.build(:id_person_party_registry => user['id'], :first_name => user['first_name'], :last_name => user['last_name'])
     @candidate_list.save
@@ -56,7 +56,7 @@ class CandidateListsController < ApplicationController
 
   #DELETE /candidate_lists/:id/destroy_candidacy/:candidate.id
   def destroy_candidacy
-    set_candidate_list
+    authorize! :destroy_candidacy, @candidate_list
     candidate = @candidate_list.candidates.find(params[:candidate_id])
     candidate.destroy
     respond_to do |format|

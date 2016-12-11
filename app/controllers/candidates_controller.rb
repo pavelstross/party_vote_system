@@ -1,5 +1,6 @@
 class CandidatesController < ApplicationController
   before_action :set_candidate, only: [:show, :edit, :update, :destroy]
+  authorize_resource
 
   # GET /candidates
   # GET /candidates.json

@@ -1,4 +1,10 @@
-<h1>Výpis voleb</h1>
+<h1>
+  <% if @state then %>
+    <%=t "election_state.title.#{@state}" %>
+  <% else %>
+    Výpis voleb
+  <% end %>
+</h1>
 
 <table class="table table-striped table-hover">
   <thead>

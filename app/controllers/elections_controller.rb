@@ -2,13 +2,14 @@ class ElectionsController < ApplicationController
   require 'encryption'
   require 'base64'
 
-  load_and_authorize_resource
+  authorize_resource
 
   before_action :set_election, only: [:show, :edit, :update, :destroy, :count_votes]
 
   # GET /elections
   # GET /elections.json
   def index
+    @state = params[:state]
     if params[:state]
       @elections = Election.where(state: params[:state])
     else
@@ -33,15 +34,18 @@ class ElectionsController < ApplicationController
   # POST /elections
   # POST /elections.json
   def create
-    params = election_params.slice(:eligible_seats, :title, :description, :election_type, :scope_type, :scope_id_region)
+    args = election_params.slice(:eligible_seats, :title, :description, :election_type, :scope_type, :scope_id_region)
     if election_params[:election_type] != 'resolution'
-      params[:preparation_starts_at] = parse_datetime_params(election_params, :preparation_starts_at)
-      params[:preparation_ends_at] = parse_datetime_params(election_params, :preparation_ends_at)
+      args[:preparation_starts_at] = parse_datetime_params(election_params, :preparation_starts_at)
+      args[:preparation_ends_at] = parse_datetime_params(election_params, :preparation_ends_at)
     end
-    params[:voting_starts_at] = parse_datetime_params(election_params, :voting_starts_at)
-    params[:voting_ends_at] = parse_datetime_params(election_params, :voting_ends_at)
+    args[:voting_starts_at] = parse_datetime_params(election_params, :voting_starts_at)
+    args[:voting_ends_at] = parse_datetime_params(election_params, :voting_ends_at)
 
-    @election = Election.new(params)
+    puts "ARGS -------"
+    puts args
+
+    @election = Election.new(args)
     @election.ballot_box
     @election.participant_list
     @election.candidate_list
@@ -127,19 +131,19 @@ class ElectionsController < ApplicationController
   #end
 
 
-  # PATCH/PUT /elections/1
-  # PATCH/PUT /elections/1.json
-  def update
-    respond_to do |format|
-      if @election.update(election_params)
-        format.html { render :show, notice: 'Election was successfully updated.' }
-        format.json { render :show, status: :ok, location: @election }
-      else
-        format.html { render :edit }
-        format.json { render json: @election.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # # PATCH/PUT /elections/1
+  # # PATCH/PUT /elections/1.json
+  # def update
+  #   respond_to do |format|
+  #     if @election.update(election_params)
+  #       format.html { render :show, notice: 'Election was successfully updated.' }
+  #       format.json { render :show, status: :ok, location: @election }
+  #     else
+  #       format.html { render :edit }
+  #       format.json { render json: @election.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
   # DELETE /elections/1
   # DELETE /elections/1.json
