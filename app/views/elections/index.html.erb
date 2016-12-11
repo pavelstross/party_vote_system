@@ -51,13 +51,15 @@
                 <li><%= link_to 'Kandidátní listina', election.candidate_list, {:class => ''}  %></li>
               <% end %>
               <li><%= link_to 'Detaily voleb', election, {:class => ''}  %></li>
-              <% if election.is_voting_phase? then %>
+              <% if election.is_voting_phase? && can?(:vote, election) then %>
                 <li><%= link_to 'Hlasovat', new_ballot_paper_path(:election => election), {:class => ''}  %></li>
               <% end %>
-              <% if election.voting_ended? then %>
+              <% if election.voting_ended? && can?(:count_votes, election) then %>
                 <li><%= link_to 'Vyhodnotit volby', "elections/#{election.id}/count_votes", {:class => ''}  %></li>
               <% end %>
-              <li><%= link_to 'Zrušit volby', election, { method: :delete, data: { confirm: 'Are you sure?' }, :class => ''}  %></li>
+              <% if can? :destroy, election %>
+                <li><%= link_to 'Zrušit volby', election, { method: :delete, data: { confirm: 'Are you sure?' }, :class => ''}  %></li>
+              <% end %>
             </ul>
           </div>
         </td>

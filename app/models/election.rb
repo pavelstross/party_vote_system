@@ -80,10 +80,13 @@ class Election
         transitions :from => :preparation, :to => :prepared, :if => :has_preparation_phase?
     end
 
-    
-    event :start_voting do
-      transitions :from => :prepared, :to => :voting, :if => :has_preparation_phase?
-      transitions :from  => :initialized, :to => :voting, :unless => :has_preparation_phase?
+    event :start_voting, :after => :set_counting_rules do
+      # after do
+      #   self.set_counting_rules()
+      # end
+      transitions :from => :initialized, :to => :voting, :unless => :has_preparation_phase?
+      transitions :from => :prepared, :to => :voting # , :if => :has_preparation_phase?
+      # transitions :from  => [:initialized, :prepared], :to => :voting
     end
 
     event :stop_voting do
@@ -114,9 +117,8 @@ class Election
   end
 
   def is_more_candidates_than_eligible_seats?
-    self.reload
     candidates = self.candidate_list.candidates
-    (self.eligible_seats < candidates.count) ? true : false
+    self.eligible_seats < candidates.count
   end
 
   def set_counting_rules

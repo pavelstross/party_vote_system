@@ -5,11 +5,11 @@ class BallotPapersController < ApplicationController
   before_action :set_ballot_paper, only: [:show, :edit, :update, :destroy]
   before_action :set_election, only: [:new, :create]
 
-  # GET /ballot_papers
-  # GET /ballot_papers.json
-  def index
-    @ballot_papers = BallotPaper.all
-  end
+  # # GET /ballot_papers
+  # # GET /ballot_papers.json
+  # def index
+  #   @ballot_papers = BallotPaper.all
+  # end
 
   # GET /ballot_papers/1
   # GET /ballot_papers/1.json
@@ -21,14 +21,15 @@ class BallotPapersController < ApplicationController
     @ballot_paper = BallotPaper.new
   end
 
-  # GET /ballot_papers/1/edit
-  def edit
-  end
+  # # GET /ballot_papers/1/edit
+  # def edit
+  # end
 
   # POST /ballot_papers
   # POST /ballot_papers.json
   def create
-    @ballot_paper = BallotPaper.new 
+    @ballot_paper = BallotPaper.new(ballot_box: @election.ballot_box)
+    authorize! :create, @ballot_paper
 
     saved = false
     if !@election.is_voting_phase? then
@@ -42,7 +43,6 @@ class BallotPapersController < ApplicationController
       public_key = Encryption::PublicKey.new(@election.public_key)
       @ballot_paper.encrypted_vote = Base64.encode64(public_key.encrypt(vote.to_json))
       @ballot_paper.encrypted_vote_hash = hash_of_data(@ballot_paper.encrypted_vote)    
-      puts "\n\n\n\n\DEBUG\n#{params[:choices]} DEBUG\n\n#{choices}\n#{@ballot_paper.vote_hash}\n#{vote}\n#{@ballot_paper.encrypted_vote}\n#{@ballot_paper.encrypted_vote_hash}\n\n\n\n\DEBUG DEBUG\n"
       puts @election.title
       ballot_box = @election.ballot_box
       ballot_box.ballot_papers.build(:encrypted_vote=> @ballot_paper.encrypted_vote, :vote_hash => @ballot_paper.vote_hash, :encrypted_vote_hash => @ballot_paper.encrypted_vote_hash )
@@ -61,29 +61,29 @@ class BallotPapersController < ApplicationController
     end
   end
 
-  # PATCH/PUT /ballot_papers/1
-  # PATCH/PUT /ballot_papers/1.json
-  def update
-    respond_to do |format|
-      if @ballot_paper.update(ballot_paper_params)
-        format.html { redirect_to @ballot_paper, notice: 'Ballot paper was successfully updated.' }
-        format.json { render :show, status: :ok, location: @ballot_paper }
-      else
-        format.html { renedr :edit }
-        format.json { render json: @ballot_paper.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # # PATCH/PUT /ballot_papers/1
+  # # PATCH/PUT /ballot_papers/1.json
+  # def update
+  #   respond_to do |format|
+  #     if @ballot_paper.update(ballot_paper_params)
+  #       format.html { redirect_to @ballot_paper, notice: 'Ballot paper was successfully updated.' }
+  #       format.json { render :show, status: :ok, location: @ballot_paper }
+  #     else
+  #       format.html { renedr :edit }
+  #       format.json { render json: @ballot_paper.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
-  # DELETE /ballot_papers/1
-  # DELETE /ballot_papers/1.json
-  def destroy
-    @ballot_paper.destroy
-    respond_to do |format|
-      format.html { redirect_to ballot_papers_url, notice: 'Ballot paper was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  # # DELETE /ballot_papers/1
+  # # DELETE /ballot_papers/1.json
+  # def destroy
+  #   @ballot_paper.destroy
+  #   respond_to do |format|
+  #     format.html { redirect_to ballot_papers_url, notice: 'Ballot paper was successfully destroyed.' }
+  #     format.json { head :no_content }
+  #   end
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.

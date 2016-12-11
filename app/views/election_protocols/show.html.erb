@@ -10,15 +10,14 @@
     <strong>Působnost:</strong> <%= election_scope_name(@election_protocol.election) %><br>
     <strong>Hlasování:</strong> od <%= format_date @election_protocol.election.voting_starts_at %> do <%= format_date @election_protocol.election.voting_ends_at %><br>
     <h2>Výsledky</h2>
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>kandidát</th>
-            <th>PRO</th>
-            <th>PROTI</th>
-        </tr>
-        <% @election_protocol.results.each do |candidate_id, votes| %>
+    <% if @election_protocol.election.election_type == 'resolution' %>
+        <table class="table table-striped table-hover">
             <tr>
-                <td><%= @election_protocol.election.candidate_list.candidates.find(candidate_id).full_name %></td>
+                <th>PRO</th>
+                <th>PROTI</th>
+            </tr>
+            <tr>
+                <% votes = @election_protocol.results['resolution'] %>
                 <td>
                     <strong>Počet hlasů:</strong> <%= votes[:for].length %><br>
                     <strong>Hlasy:</strong>
@@ -34,6 +33,33 @@
                     <% end %>
                 </td>
             </tr>
-        <% end %>
-    </table>
+        </table>
+    <% else %>
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>kandidát</th>
+                <th>PRO</th>
+                <th>PROTI</th>
+            </tr>
+            <% @election_protocol.results.each do |candidate_id, votes| %>
+                <tr>
+                    <td><%= @election_protocol.election.candidate_list.candidates.find(candidate_id).full_name %></td>
+                    <td>
+                        <strong>Počet hlasů:</strong> <%= votes[:for].length %><br>
+                        <strong>Hlasy:</strong>
+                        <% votes[:for].each do |vote_hash| %>
+                            <pre><%= vote_hash %></pre>
+                        <% end %>
+                    </td>
+                    <td>
+                        <strong>Počet hlasů:</strong> <%= votes[:against].length %><br>
+                        <strong>Hlasy:</strong>
+                        <% votes[:against].each do |vote_hash| %>
+                            <pre><%= vote_hash %></pre>
+                        <% end %>
+                    </td>
+                </tr>
+            <% end %>
+        </table>
+    <% end %>
 <% end %>

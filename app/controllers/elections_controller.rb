@@ -42,9 +42,6 @@ class ElectionsController < ApplicationController
     args[:voting_starts_at] = parse_datetime_params(election_params, :voting_starts_at)
     args[:voting_ends_at] = parse_datetime_params(election_params, :voting_ends_at)
 
-    puts "ARGS -------"
-    puts args
-
     @election = Election.new(args)
     @election.ballot_box
     @election.participant_list
@@ -84,10 +81,14 @@ class ElectionsController < ApplicationController
          !params[:private_key].ends_with?('-----END RSA PRIVATE KEY-----') then
          flash[:error] = 'Neplatný soukromý klíč'
       else
-        # create blank results table      
-        results = {}
-        @election.candidate_list.candidates.each do |candidate|
-          results[candidate.id.to_s] = {for: [], against: []}
+        if @election.election_type == 'resolution' then
+          results = {'resolution' => {for: [], against: []}}
+        else
+          # create blank results table      
+          results = {}
+          @election.candidate_list.candidates.each do |candidate|
+            results[candidate.id.to_s] = {for: [], against: []}
+          end
         end
 
         # populate result table w/ votes from ballot_box
@@ -105,12 +106,11 @@ class ElectionsController < ApplicationController
           end
         end
         @election.election_protocol.results = results
+        @election.count_votes()
         saved = @election.election_protocol.save
       end
 
       if saved
-        # FIXME: uncomment
-        # @election.count_votes()
         respond_to do |format|
           format.html { redirect_to @election.election_protocol, notice: 'Volby byly vyhodnoceny' }
         end
