@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   #require 'sidekiq/web'
   #mount Sidekiq::Web => '/sidekiq'
 
-  root 'elections#index'
+  root 'home#index'
 
   get '/auth/:provider/callback', to: 'sessions#create'
   get '/sessions/destroy'

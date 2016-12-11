@@ -1,0 +1,7 @@
+<h1>Volební systém Svobodných</h1>
+
+<% if current_user then %>
+	
+<% else %>
+	Pro použití se <%= link_to "přihlaste", "/auth/party_registry" %>
+<% end %>

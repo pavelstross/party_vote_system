@@ -1,8 +1,8 @@
 class ElectionsController < ApplicationController
-  
   require 'encryption'
   require 'base64'
 
+  load_and_authorize_resource
 
   before_action :set_election, only: [:show, :edit, :update, :destroy, :count_votes]
 
