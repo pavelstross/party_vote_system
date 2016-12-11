@@ -17,4 +17,14 @@ module ApplicationHelper
   def format_date(date)
     date.strftime '%-d.%-m.%Y %H:%M'
   end
+
+  def election_scope_name(election)
+    case election.scope_type
+      when 'general' then
+        "Celorepublikové"
+      when 'region' then
+        "Krajské / #{Region.find(election.scope_id_region).name}"
+    end
+  end
+
 end

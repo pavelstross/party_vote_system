@@ -1,56 +1,10 @@
 <h1>Volby byly vytvořeny</h1>
-<p>
-  <strong>Typ</strong>
-  <%=t "election_type.#{@election.election_type}" %>
-</p>
-<p>
-  <strong>Eligible_seats:</strong>
-  <%= @election.eligible_seats %>
-<p>
-<p>
-  <strong>State:</strong>
-  <%= @election.state %>
-</p>
 
-<p>
-  <strong>Název:</strong>
-  <%= @election.title %>
-</p>
+<%= render "detail", { election: @election } %>
 
-<p>
-  <strong>Popis:</strong>
-  <%= @election.description %>
-</p>
-
-<p>
-  <strong>Scope type:</strong>
-  <%= @election.scope_type %>
-</p>
-
-<p>
-  <strong>Scope id region:</strong>
-  <%= @election.scope_id_region %>
-</p>
-
-<% if @election.has_preparation_phase? %>
-  <p>
-    <strong>Přihlašování kandidátů: </strong>
-    od <%= format_date @election.preparation_starts_at %> do <%= format_date @election.preparation_ends_at %>
-  </p>
-<% end %>
-
-<p>
-  <strong>Hlasování:</strong>
-  od <%= format_date @election.voting_starts_at %> do <%= format_date @election.voting_ends_at %>
-</p>
-
-<p>
-  <strong>Veřejný klíč:</strong>
-  <pre><%= @election.public_key %></pre>
-</p>
 <p>
   <strong>Privátní klíč:</strong>
   <pre><%= @shown_private_key %></pre>
 </p>
 
-<%= link_to'Back', elections_path, {:class => 'btn btn-primary'} %>
+<%= link_to 'Back', elections_path, {:class => 'btn btn-primary'} %>

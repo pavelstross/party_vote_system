@@ -32,7 +32,9 @@
         </tr>
       <% end %>
       <tr>
+      <%= @election.id %>
         <td colspan="3">
+          <%= hidden_field_tag "election", @election.id %>
           <%= f.submit "Hlasovat", {:class => 'btn btn-primary pull-right'} %>
         </td>
       </tr>

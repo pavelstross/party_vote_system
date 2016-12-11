@@ -74,4 +74,8 @@ gem 'sidekiq'
 gem 'sinatra', :require => nil
 gem 'slim'
 
+#lepsi prace s hashi
+gem 'hashie'
+
+
 gem 'underscore-rails'

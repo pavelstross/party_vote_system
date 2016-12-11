@@ -1,4 +1,19 @@
 <p id="notice"><%= notice %></p>
+<table>
+  <thead>
+    <tr>
+      <th>Kontrolní součty zašifrovaných hlasů ve velební urně voleb <%= @ballot_box.election.title %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ballot_papers.each do |ballot_paper| %>
+      <tr>
+        <td><%= ballot_paper.encrypted_vote_hash %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 
 

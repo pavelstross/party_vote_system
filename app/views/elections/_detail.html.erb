@@ -1,0 +1,41 @@
+<p>
+  <strong>Typ:</strong>
+  <%=t "election_type.#{@election.election_type}" %>
+</p>
+
+<p>
+  <strong>Název:</strong>
+  <%= @election.title %>
+</p>
+
+<p>
+  <strong>Popis:</strong>
+  <%= @election.description %>
+</p>
+
+<p>
+  <strong>Počet volitelných míst:</strong>
+  <%= @election.eligible_seats %>
+</p>
+
+<p>
+  <strong>Působnost:</strong>
+  <%= election_scope_name(@election) %>
+</p>
+
+<% if @election.has_preparation_phase? %>
+  <p>
+    <strong>Přihlašování kandidátů: </strong>
+    od <%= format_date @election.preparation_starts_at %> do <%= format_date @election.preparation_ends_at %>
+  </p>
+<% end %>
+
+<p>
+  <strong>Hlasování:</strong>
+  od <%= format_date @election.voting_starts_at %> do <%= format_date @election.voting_ends_at %>
+</p>
+
+<p>
+  <strong>Veřejný klíč:</strong>
+  <pre><%= @election.public_key %></pre>
+</p>

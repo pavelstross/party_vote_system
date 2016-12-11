@@ -1,5 +1,9 @@
 class BallotPapersController < ApplicationController
+  
+  require 'encryption'
+  require "base64"
   before_action :set_ballot_paper, only: [:show, :edit, :update, :destroy]
+  before_action :set_election, only: [:new, :create]
 
   # GET /ballot_papers
   # GET /ballot_papers.json
@@ -14,9 +18,7 @@ class BallotPapersController < ApplicationController
 
   # GET /ballot_papers/new
   def new
-    set_election
     @ballot_paper = BallotPaper.new
-    @ballot_paper.counting_rules = @election.counting_rules
   end
 
   # GET /ballot_papers/1/edit
@@ -27,16 +29,29 @@ class BallotPapersController < ApplicationController
   # POST /ballot_papers.json
   def create
     @ballot_paper = BallotPaper.new 
-    choices = params[:choices]
-    @ballot_paper.vote_hash = hash_of_data(choices)
-    vote = [ choices , @ballot_paper.vote_hash ]
-    @ballot_paper.encrypted_vote = vote
-    @ballot_paper.encrypted_vote_hash = hash_of_data(@ballot_paper.encrypted_vote)
-    
-    puts "\n\n\n\n\DEBUG\n#{params[:choices]} DEBUG\n\n#{choices}\n#{@ballot_paper.vote_hash}\n#{vote}\n#{@ballot_paper.encrypted_vote}\n#{@ballot_paper.encrypted_vote_hash}\n\n\n\n\DEBUG DEBUG"
-   
+
+    saved = false
+    if !@election.is_voting_phase? then
+      flash[:error] = 'Nemůžete hlasovat'
+    elsif @election.participant_list.has_voted?(current_user['id']) then
+      flash[:error] = 'V těchto volbách jste již hlasoval'
+    else
+      choices = params[:choices]
+      @ballot_paper.vote_hash = hash_of_data(choices)
+      vote = {choices: choices, vote_hash: @ballot_paper.vote_hash}
+      public_key = Encryption::PublicKey.new(@election.public_key)
+      @ballot_paper.encrypted_vote = Base64.encode64(public_key.encrypt(vote.to_json))
+      @ballot_paper.encrypted_vote_hash = hash_of_data(@ballot_paper.encrypted_vote)    
+      puts "\n\n\n\n\DEBUG\n#{params[:choices]} DEBUG\n\n#{choices}\n#{@ballot_paper.vote_hash}\n#{vote}\n#{@ballot_paper.encrypted_vote}\n#{@ballot_paper.encrypted_vote_hash}\n\n\n\n\DEBUG DEBUG\n"
+      puts @election.title
+      ballot_box = @election.ballot_box
+      ballot_box.ballot_papers.build(:encrypted_vote=> @ballot_paper.encrypted_vote, :vote_hash => @ballot_paper.vote_hash, :encrypted_vote_hash => @ballot_paper.encrypted_vote_hash )
+      @election.participant_list.add_voter(current_user['id'])
+      saved = ballot_box.save && @election.participant_list.save
+    end
+
     respond_to do |format|
-      if @ballot_paper
+      if saved
         format.html { redirect_to "/elections/?state=voting" , notice: 'Váš hlas byl uspěšně vložen do volební urny.' }
         format.json { render :show, status: :created, location: @ballot_paper }
       else
@@ -54,7 +69,7 @@ class BallotPapersController < ApplicationController
         format.html { redirect_to @ballot_paper, notice: 'Ballot paper was successfully updated.' }
         format.json { render :show, status: :ok, location: @ballot_paper }
       else
-        format.html { render :edit }
+        format.html { renedr :edit }
         format.json { render json: @ballot_paper.errors, status: :unprocessable_entity }
       end
     end
@@ -86,6 +101,6 @@ class BallotPapersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def ballot_paper_params
-      params.permit(:votes, :choices)
+      params.permit(:election, :choices)
     end
 end

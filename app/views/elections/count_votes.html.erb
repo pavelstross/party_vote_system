@@ -1,15 +1,14 @@
 <h1>Vyhodnotit volby</h1>
-  	<h2><%= @election.title %></h2>
-	
-	<%= form_tag(:action => 'count_votes', :controller => 'elections', :method => 'post') do %>
-  		<div class="form-group">
-		<%= label_tag :private_key, "Privátní klíč voleb:" %>
-		<%= text_area_tag :private_key %>
-		</div>
+    <h2><%= @election.title %></h2>
 
-		<div class="actions">
-		<%= submit_tag "Vyhodnotit", {:class => 'btn btn-primary'}%>
-		</div>
-	<% end %>
+    <%= form_tag(:action => 'count_votes', :controller => 'elections', :method => 'post') do %>
+        <div class="form-group">
+            <%= label_tag :private_key, "Privátní klíč voleb:" %>
+            <%= text_area_tag :private_key %>
+        </div>
+        <div class="actions">
+            <%= submit_tag "Vyhodnotit", {:class => 'btn btn-primary'}%>
+        </div>
+    <% end %>
 
 <%= link_to 'Zpět do administrace voleb', elections_path, {:class => 'btn btn-primary'}%>

@@ -1,8 +1,10 @@
 class ElectionsController < ApplicationController
   
   require 'encryption'
+  require 'base64'
 
-  before_action :set_election, only: [:show, :edit, :update, :destroy]
+
+  before_action :set_election, only: [:show, :edit, :update, :destroy, :count_votes]
 
   # GET /elections
   # GET /elections.json
@@ -51,7 +53,7 @@ class ElectionsController < ApplicationController
     @shown_private_key = private_key.to_s
     
     respond_to do |format|
-      if (@election.save && @election.ballot_box.save && @election.participant_list.save && @election.candidate_list.save)
+      if (@election.save && @election.ballot_box.save && @election.participant_list.save && @election.candidate_list.save && @election.election_protocol.save)
 
         format.html { render :show_created, notice: 'Volby byly vytvořeny.'}
         format.json { render :show, status: :created, location: @election }
@@ -68,13 +70,54 @@ class ElectionsController < ApplicationController
     case request.method_symbol
     #GET /elections/:id/count_votes/  
     when :get
-      set_election
       respond_to do |format|
         format.html { render :count_votes }
       end
     when :post
-      #POST /elections/:id/count_votes/
+      saved = false
+      if params[:private_key].nil? ||
+         !params[:private_key].starts_with?('-----BEGIN RSA PRIVATE KEY-----') ||
+         !params[:private_key].ends_with?('-----END RSA PRIVATE KEY-----') then
+         flash[:error] = 'Neplatný soukromý klíč'
+      else
+        # create blank results table      
+        results = {}
+        @election.candidate_list.candidates.each do |candidate|
+          results[candidate.id.to_s] = {for: [], against: []}
+        end
 
+        # populate result table w/ votes from ballot_box
+        @election.ballot_box.ballot_papers.each do |ballot_paper|
+          private_key = Encryption::PrivateKey.new(params[:private_key])
+          decrypted_vote = JSON.parse(private_key.decrypt(Base64.decode64(ballot_paper.encrypted_vote)))
+          puts "decrypted_vote: "
+          puts decrypted_vote
+
+          choices = decrypted_vote['choices']
+          vote_hash = decrypted_vote['vote_hash']
+
+          choices.each do |candidate_id, choice|
+            results[candidate_id][choice.to_sym].push(vote_hash)
+          end
+        end
+        @election.election_protocol.results = results
+        saved = @election.election_protocol.save
+      end
+
+      if saved
+        # FIXME: uncomment
+        # @election.count_votes()
+        respond_to do |format|
+          format.html { redirect_to @election.election_protocol, notice: 'Volby byly vyhodnoceny' }
+        end
+      else
+        respond_to do |format|
+          format.html {
+            flash[:error] ||= 'Při vyhodnocování voleb nastala chyba'
+            render :count_votes
+          }
+        end
+      end
     end
   end
 
@@ -118,6 +161,6 @@ class ElectionsController < ApplicationController
     def election_params
       params.require(:election).permit({ :state => ['preparation', 'voting', 'votes_counted']},
         :election_type, :eligible_seats, :state, :title, :description, :scope_type, :scope_id_region, :preparation_starts_at,
-        :preparation_ends_at, :voting_starts_at, :voting_ends_at, :public_key)
+        :preparation_ends_at, :voting_starts_at, :voting_ends_at, :public_key, :private_key)
     end
 end

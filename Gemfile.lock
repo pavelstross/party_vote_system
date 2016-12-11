@@ -225,6 +225,7 @@ DEPENDENCIES
   configatron
   encryption
   font-awesome-rails
+  hashie
   httparty
   jbuilder (~> 2.5)
   jquery-rails

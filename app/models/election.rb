@@ -105,6 +105,10 @@ class Election
 
   alias :has_candidate_list? :has_preparation_phase?
 
+  def is_voting_phase?
+    self.voting?
+  end
+
   def is_election_type_resolution?
     self.election_type == 'resolution'
   end

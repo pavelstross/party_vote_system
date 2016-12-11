@@ -29,6 +29,7 @@
       <% end %>
       <tr>
         <td colspan="3">
+          <%= hidden_field_tag "election", @election.id %>
           <%= link_to 'Hlasovat v jiných volbách', elections_path(state: :voting), {:class => 'btn btn-link pull-left'} %>
           <%= f.submit "Hlasovat", {:class => 'btn btn-primary pull-right'} %>
         </td>

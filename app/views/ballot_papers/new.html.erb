@@ -1,23 +1,24 @@
-<h1>Hlasovací lístek</h1>
+<h1>Hlasovací lístek - <%= @election.title %></h1>
 
-<p>
-	<strong>Název voleb:</strong>
-	<%= @election.title %>
-</p>
+<% if !@election.is_voting_phase? then %>
+    <div class="alert alert-warning">
+        Nemůžete hlasovat
+    </div>
+<% else %>
+    <p>
+        <strong>Popis voleb:</strong>
+        <%= @election.description %>
+    </p>
 
-<p>
-	<strong>Popis voleb:</strong>
-	<%= @election.description %>
-</p>
+    <% if @election.counting_rules == 'resolution' %>
+        <%= render "resolution_form", { ballot_paper: @ballot_paper, election: @election } %>
+    <% end %>
 
-<% if @election.counting_rules == 'resolution' %>
-	<%= render "resolution_form", { ballot_paper: @ballot_paper, election: @election } %>
-<% end %>
+    <% if @election.counting_rules == 'candidates_approval' %>
+        <%= render "candidates_approval_form", { ballot_paper: @ballot_paper, election: @election } %>
+    <% end %>
 
-<% if @election.counting_rules == 'candidates_approval' %>
-	<%= render "candidates_approval_form", { ballot_paper: @ballot_paper, election: @election } %>
-<% end %>
-
-<% if @election.counting_rules == 'candidates_choosing' %>
-	<%= render "candidates_choosing_form", { ballot_paper: @ballot_paper, election: @election } %>
+    <% if @election.counting_rules == 'candidates_choosing' %>
+        <%= render "candidates_choosing_form", { ballot_paper: @ballot_paper, election: @election } %>
+    <% end %>
 <% end %>

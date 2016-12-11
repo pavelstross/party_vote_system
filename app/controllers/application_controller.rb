@@ -4,6 +4,11 @@ class ApplicationController < ActionController::Base
   def current_user
     session[:user]
   end
+
+  def not_found
+    raise ActionController::RoutingError.new('Not Found')
+  end
+  
   helper_method :current_user
 
   #extract a datetime object from params, useful for receiving datetime_select attributes

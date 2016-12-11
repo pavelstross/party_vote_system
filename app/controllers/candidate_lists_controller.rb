@@ -10,7 +10,11 @@ class CandidateListsController < ApplicationController
   # GET /candidate_lists/1
   # GET /candidate_lists/1.json
   def show
-    @candidates = @candidate_list.candidates
+    if @candidate_list.nil? || @candidate_list.election.nil? || @candidate_list.election.is_election_type_resolution?
+      not_found
+    else
+      @candidates = @candidate_list.candidates
+    end
   end
 
   # GET /candidate_lists/new
