@@ -95,9 +95,7 @@ class ElectionsController < ApplicationController
         @election.ballot_box.ballot_papers.each do |ballot_paper|
           private_key = Encryption::PrivateKey.new(params[:private_key])
           decrypted_vote = JSON.parse(private_key.decrypt(Base64.decode64(ballot_paper.encrypted_vote)))
-          puts "decrypted_vote: "
-          puts decrypted_vote
-
+          
           choices = decrypted_vote['choices']
           vote_hash = decrypted_vote['vote_hash']
 
@@ -127,7 +125,7 @@ class ElectionsController < ApplicationController
 
   #POST /elections/:id/count_votes/
   #def count_votes
-  #  puts "blablabla"
+  #  
   #end
 
 

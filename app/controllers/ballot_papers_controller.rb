@@ -27,6 +27,8 @@ class BallotPapersController < ApplicationController
 
   # POST /ballot_papers
   # POST /ballot_papers.json
+
+  #vytvoreni, zasifrovani a ulozeni hlasu
   def create
     @ballot_paper = BallotPaper.new(ballot_box: @election.ballot_box)
     authorize! :create, @ballot_paper
@@ -38,8 +40,10 @@ class BallotPapersController < ApplicationController
       flash[:error] = 'V těchto volbách jste již hlasoval'
     else
       choices = params[:choices]
-      @ballot_paper.vote_hash = hash_of_data(choices)
-      vote = {choices: choices, vote_hash: @ballot_paper.vote_hash}
+      salt = SecureRandom.hex(64)
+      salted_vote = {choices: choices, salt: salt}
+      @ballot_paper.vote_hash = hash_of_data(salted_vote)
+      vote = {choices: choices, vote_hash: @ballot_paper.vote_hash, salt: salt}
       public_key = Encryption::PublicKey.new(@election.public_key)
       @ballot_paper.encrypted_vote = Base64.encode64(public_key.encrypt(vote.to_json))
       @ballot_paper.encrypted_vote_hash = hash_of_data(@ballot_paper.encrypted_vote)    
@@ -91,8 +95,12 @@ class BallotPapersController < ApplicationController
       @ballot_paper = BallotPaper.find(params[:id])
     end
 
-    def hash_of_data(data)
+    def hash_of_data_with_salt(data)
        Digest::SHA2.new(512).hexdigest(data.to_s + SecureRandom.hex(64))
+    end
+
+    def hash_of_data(data)
+       Digest::SHA2.new(512).hexdigest(data.to_s)
     end
 
     def set_election
