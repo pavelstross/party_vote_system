@@ -61,7 +61,7 @@ class Election
     allow_blank: false,
     message: "Veřejný klíč musí být nastaven"
   }
-
+ 
   aasm.attribute_name :state
 
   aasm do

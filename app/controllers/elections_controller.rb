@@ -53,9 +53,17 @@ class ElectionsController < ApplicationController
     @election.public_key = public_key.to_s
     @shown_private_key = private_key.to_s
     
-    respond_to do |format|
-      if (@election.save && @election.ballot_box.save && @election.participant_list.save && @election.candidate_list.save && @election.election_protocol.save)
+    saved = (@election.save && @election.ballot_box.save && @election.participant_list.save && @election.candidate_list.save && @election.election_protocol.save)
 
+    #if saved then
+    ##  ElectionTransitionWorker.perform_at(@election.preparation_starts_at, @election_id, 'start_preparation!')
+     # ElectionTransitionWorker.perform_at(@election.preparation_ends_at, @election_id, 'stop_preparation!')
+     # ElectionTransitionWorker.perform_at(@election.voting_starts_at, @election_id, 'start_voting!')
+     # ElectionTransitionWorker.perform_at(@election.voting_ends_at, @election_id, 'stop_voting!')
+    #end
+
+    respond_to do |format|
+      if saved
         format.html { render :show_created, notice: 'Volby byly vytvořeny.'}
         format.json { render :show, status: :created, location: @election }
       else
