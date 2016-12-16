@@ -41,6 +41,7 @@ class ElectionsController < ApplicationController
     end
     args[:voting_starts_at] = parse_datetime_params(election_params, :voting_starts_at)
     args[:voting_ends_at] = parse_datetime_params(election_params, :voting_ends_at)
+    
 
     @election = Election.new(args)
     @election.ballot_box
@@ -53,14 +54,19 @@ class ElectionsController < ApplicationController
     @election.public_key = public_key.to_s
     @shown_private_key = private_key.to_s
     
+    
+    
+
     saved = (@election.save && @election.ballot_box.save && @election.participant_list.save && @election.candidate_list.save && @election.election_protocol.save)
 
-    #if saved then
-    ##  ElectionTransitionWorker.perform_at(@election.preparation_starts_at, @election_id, 'start_preparation!')
-     # ElectionTransitionWorker.perform_at(@election.preparation_ends_at, @election_id, 'stop_preparation!')
-     # ElectionTransitionWorker.perform_at(@election.voting_starts_at, @election_id, 'start_voting!')
-     # ElectionTransitionWorker.perform_at(@election.voting_ends_at, @election_id, 'stop_voting!')
-    #end
+    if saved then
+      if @election.election_type != 'resolution' then
+        ElectionTransitionWorker.perform_at(@election.preparation_starts_at, @election.id.to_s, :start_preparation!)
+        ElectionTransitionWorker.perform_at(@election.preparation_ends_at, @election.id.to_s, :stop_preparation!)
+      end
+      ElectionTransitionWorker.perform_at(@election.voting_starts_at, @election.id.to_s, :start_voting!)
+      ElectionTransitionWorker.perform_at(@election.voting_ends_at, @election.id.to_s, :stop_voting!)
+    end
 
     respond_to do |format|
       if saved

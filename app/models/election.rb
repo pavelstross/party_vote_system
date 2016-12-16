@@ -81,9 +81,9 @@ class Election
     end
 
     event :start_voting, :after => :set_counting_rules do
-      # after do
-      #   self.set_counting_rules()
-      # end
+       after do
+         self.set_counting_rules()
+      end
       transitions :from => :initialized, :to => :voting, :unless => :has_preparation_phase?
       transitions :from => :prepared, :to => :voting # , :if => :has_preparation_phase?
       # transitions :from  => [:initialized, :prepared], :to => :voting
