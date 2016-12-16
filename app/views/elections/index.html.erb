@@ -58,7 +58,8 @@
                 <li><%= link_to 'Vyhodnotit volby', "elections/#{election.id}/count_votes", {:class => ''}  %></li>
               <% end %>
               <% if can? :destroy, election %>
-                <li><%= link_to 'Zrušit volby', election, { method: :delete, data: { confirm: 'Are you sure?' }, :class => ''}  %></li>
+                <li><%= link_to 'Zrušit volby', election, 
+                { method: :delete, data: { confirm: 'Opravdu jste si jistý, že chcete zrušit volby ?' }, :class => ''}  %></li>
               <% end %>
             </ul>
           </div>

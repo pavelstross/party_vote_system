@@ -162,7 +162,7 @@ class ElectionsController < ApplicationController
   def destroy
     @election.destroy
     respond_to do |format|
-      format.html { redirect_to elections_url, notice: 'Election was successfully destroyed.' }
+      format.html { redirect_to elections_url, notice: 'Volby byly zrušeny.' }
       format.json { head :no_content }
     end
   end
