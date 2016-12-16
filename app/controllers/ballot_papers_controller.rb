@@ -47,9 +47,8 @@ class BallotPapersController < ApplicationController
       public_key = Encryption::PublicKey.new(@election.public_key)
       @ballot_paper.encrypted_vote = Base64.encode64(public_key.encrypt(vote.to_json))
       @ballot_paper.encrypted_vote_hash = hash_of_data(@ballot_paper.encrypted_vote)    
-      puts @election.title
       ballot_box = @election.ballot_box
-      ballot_box.ballot_papers.build(:encrypted_vote=> @ballot_paper.encrypted_vote, :vote_hash => @ballot_paper.vote_hash, :encrypted_vote_hash => @ballot_paper.encrypted_vote_hash )
+      #ballot_box.ballot_papers.build(:encrypted_vote=> @ballot_paper.encrypted_vote, :vote_hash => @ballot_paper.vote_hash, :encrypted_vote_hash => @ballot_paper.encrypted_vote_hash )
       @election.participant_list.add_voter(current_user['id'])
       saved = ballot_box.save && @election.participant_list.save
       #if saved then BallotPaperMailer.ballot_paper_mail(@election, @ballot_paper, current_user).deliver #### Odkomentovat pro pouzivani maileru
